@@ -1,0 +1,1088 @@
+<!doctype html>
+<!-- Refonte de la présentation selon la méthode unslop by @heydamir (CC BY 4.0) -->
+<html lang='fr'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Cloud Computing &amp; Microsoft Azure — Session d'introduction</title>
+<style>
+:root{
+  --n0:#FFFFFF; --n1:#F6F8FA; --n2:#EEF2F6; --n3:#DCE4EC;
+  --ink:#17212E; --sec:#4E5D6E; --mut:#69778A;
+  --acc:#0068B4; --acc-ink:#005A9E; --acc-soft:#EAF3FA; --acc-line:#B9D9EC;
+  --warn:#9A5B1E; --warn-soft:#FBF2E9; --warn-line:#E8D3BE;
+  --line:#DCE4EC;
+  --shadow:0 4px 16px rgba(23,33,46,.06);
+  --r-c:16px; --r-i:8px; --r-b:8px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--n1);color:var(--ink);
+  font-family:'Segoe UI',Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.ico{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round;color:var(--sec)}
+.deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+.slide{position:absolute;inset:0;padding:48px 64px 80px;display:flex;flex-direction:column;gap:16px;
+  opacity:0;visibility:hidden;transform:translateY(8px);overflow:auto;
+  transition:opacity .32s var(--ease),transform .32s var(--ease),visibility .32s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+h1,h2,h3,h4,p{margin:0;font-weight:400}
+h1{font-size:clamp(34px,4.2vw,56px);line-height:1.1;letter-spacing:-.02em;font-weight:500}
+h2{font-size:clamp(26px,3vw,40px);line-height:1.14;letter-spacing:-.015em;font-weight:500}
+h3{font-size:clamp(16px,1.5vw,20px);font-weight:500}
+h4{font-size:13px;color:var(--acc-ink);margin:16px 0 4px;font-weight:500}
+.kicker{font-size:14px;color:var(--sec);display:flex;align-items:center;gap:8px}
+.kicker::before{content:'';width:3px;height:16px;border-radius:2px;background:var(--acc);flex:none}
+.subtitle{font-size:clamp(16px,1.6vw,22px);color:var(--sec);line-height:1.45;max-width:760px}
+.meta{font-size:13px;color:var(--mut)}
+.lead{font-size:clamp(18px,1.9vw,26px);line-height:1.35;max-width:1040px}
+.lead strong{color:var(--acc-ink);font-weight:600}
+ul.clean{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+ul.clean li{display:flex;gap:12px;align-items:flex-start;font-size:clamp(15px,1.4vw,19px);line-height:1.4}
+ul.clean li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--n3);margin-top:.6em;flex:none}
+.example{margin-top:auto;background:var(--n0);border:1px solid var(--line);border-left:3px solid var(--acc);
+  border-radius:var(--r-c);padding:16px 20px;font-size:clamp(14px,1.25vw,17px);line-height:1.45;
+  display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow)}
+.example b{color:var(--acc-ink);font-weight:600}
+.ex-ico{color:var(--sec)}
+.note-small{font-size:12px;color:var(--mut)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:32px;align-items:start;flex:1;min-height:0}
+.stack{display:grid;gap:16px;align-content:start}
+.card{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);padding:20px 24px;box-shadow:var(--shadow)}
+.frag{opacity:0;transform:translateY(8px);transition:opacity .24s var(--ease),transform .24s var(--ease)}
+.frag.in{opacity:1;transform:none}
+
+/* slide 1 */
+.title-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;flex:1}
+.amp{color:var(--acc-ink)}
+.rule{height:3px;width:120px;border-radius:2px;background:var(--acc);transform:scaleX(0);
+  transform-origin:left;transition:transform .4s var(--ease)}
+.rule.in{transform:scaleX(1)}
+.obj-n{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--mut);
+  font-variant-numeric:tabular-nums}
+.obj-card{display:flex;gap:16px;align-items:flex-start}
+
+/* slide 2 */
+.analogy{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:12px}
+.panel{border:1px solid var(--line);background:var(--n0);border-radius:var(--r-c);padding:16px 20px;box-shadow:var(--shadow)}
+.panel.old{background:var(--n2);color:var(--sec)}
+.panel.new{border-color:var(--acc-line);background:var(--acc-soft);color:var(--acc-ink)}
+.panel .t{font-weight:600;font-size:16px;margin-bottom:8px}
+.panel .d{font-size:14px;line-height:1.4}
+.arrowline{height:1px;background:var(--n3);position:relative}
+.arrowline::after{content:'';position:absolute;right:0;top:-4px;border-left:8px solid var(--n3);
+  border-top:4px solid transparent;border-bottom:4px solid transparent}
+
+/* slide 3 */
+.cmp{display:grid;gap:12px}
+.cmp-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:stretch}
+.cmp-head{font-weight:600;font-size:15px;padding:12px 16px;display:flex;gap:12px;align-items:center;color:var(--sec)}
+.cmp-cell{padding:12px 16px;border:1px solid var(--line);border-radius:var(--r-i);background:var(--n0);font-size:15px}
+.cmp-cell.cloud{border-color:var(--acc-line);background:var(--acc-soft);color:var(--acc-ink);font-weight:500}
+
+/* slide 4 */
+.pizzas{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pizza{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);overflow:hidden;box-shadow:var(--shadow)}
+.pizza-name{padding:12px;text-align:center;font-weight:600;font-size:15px;border-bottom:1px solid var(--line)}
+.layer{padding:16px 8px;text-align:center;font-size:12px;font-weight:500;border-bottom:2px solid var(--n0)}
+.layer.me{background:var(--acc);color:var(--n0)}
+.layer.ms{background:var(--n2);color:var(--sec)}
+.crust{height:8px;background:var(--n2);border-radius:0 0 15px 15px}
+.legend{display:flex;gap:24px;font-size:13px;color:var(--mut);align-items:center}
+.sw{width:12px;height:12px;border-radius:4px;display:inline-block;vertical-align:-2px;margin-right:8px}
+
+/* slide 9 */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.stat{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);padding:24px 16px;
+  text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:clamp(28px,3.2vw,44px);font-weight:500;color:var(--ink);line-height:1;
+  font-variant-numeric:tabular-nums}
+.stat .l{font-size:13px;color:var(--mut);margin-top:8px}
+
+/* slide 10 */
+.tree{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);
+  padding:24px;box-shadow:var(--shadow);font-size:15px}
+.node{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:var(--r-i);
+  padding:12px 16px;background:var(--n0);width:max-content;max-width:100%}
+.node.sub{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft)}
+.node.res{background:var(--n1)}
+.branch{margin:12px 0 0 28px;border-left:1px solid var(--n3);padding-left:24px;display:grid;gap:12px}
+.branch .node{position:relative}
+.branch .node::before{content:'';position:absolute;left:-24px;top:50%;width:24px;border-top:1px solid var(--n3)}
+.badge-warn{display:inline-flex;align-items:center;gap:8px;background:var(--warn-soft);color:var(--warn);
+  border:1px solid var(--warn-line);border-radius:var(--r-b);padding:4px 12px;font-size:12px;font-weight:600}
+
+/* slide 11 */
+.cards5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.card5{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);padding:20px 16px;
+  box-shadow:var(--shadow);display:grid;gap:12px;align-content:start}
+.card5 .cat{font-size:12px;color:var(--mut);font-weight:500}
+.card5 .srv{font-weight:600;font-size:15px;line-height:1.25}
+.card5 .d{font-size:13px;color:var(--sec);line-height:1.4}
+
+/* slide 12 */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:stretch}
+.flow-step{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);padding:16px 12px;
+  text-align:center;box-shadow:var(--shadow);position:relative}
+.flow-step .ico{margin:0 auto 8px}
+.flow-step .s{font-size:13px;font-weight:500;line-height:1.3}
+.flow-step::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);
+  color:var(--n3);font-weight:400;font-size:18px}
+.flow-step:last-child::after{display:none}
+.band{background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:var(--r-i);
+  padding:12px 16px;font-size:14px;color:var(--acc-ink)}
+
+/* slide 13 */
+.bubble{max-width:520px;border-radius:var(--r-c);padding:16px 20px;background:var(--n0);
+  border:1px solid var(--line);box-shadow:var(--shadow);font-size:16px}
+.bubble.q{border-color:var(--acc-line)}
+.bubble.a{border-color:var(--acc);background:var(--acc-soft)}
+.bubble .ico{vertical-align:-4px;margin-right:8px}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stepbox{border:1px solid var(--line);border-radius:var(--r-i);background:var(--n0);
+  padding:16px;font-size:13px;line-height:1.35;box-shadow:var(--shadow)}
+.stepbox .num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mut);
+  font-size:12px;margin-bottom:8px}
+
+/* slide 14 */
+.portal{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);
+  box-shadow:var(--shadow);overflow:hidden;position:relative}
+.portal-top{height:48px;background:var(--n2);display:flex;align-items:center;gap:12px;padding:0 16px;
+  border-bottom:1px solid var(--line)}
+.search{flex:1;background:var(--n0);border:1px solid var(--line);border-radius:var(--r-i);
+  padding:8px 12px;color:var(--mut);font-size:13px;display:flex;gap:8px;align-items:center}
+.portal-body{display:grid;grid-template-columns:150px 1fr;min-height:240px}
+.portal-side{border-right:1px solid var(--line);padding:12px;display:grid;gap:8px;
+  align-content:start;background:var(--n1)}
+.side-item{font-size:12px;color:var(--sec);display:flex;gap:8px;align-items:center;padding:8px;border-radius:var(--r-b)}
+.portal-main{padding:16px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-content:start}
+.tile{border:1px solid var(--line);border-radius:var(--r-i);padding:12px;background:var(--n0);font-size:13px}
+.tile b{display:block;font-size:15px;margin-top:4px;font-weight:600}
+.callout{position:absolute;width:28px;height:28px;border-radius:50%;background:var(--n0);
+  border:1px solid var(--line);display:grid;place-items:center;color:var(--acc-ink);
+  font-size:12px;font-weight:600;box-shadow:var(--shadow)}
+.c1{top:8px;left:48%}.c2{top:64px;left:8px}.c3{top:116px;left:46%}.c4{top:196px;left:72%}
+
+/* slide 15 */
+.bars{display:flex;align-items:flex-end;gap:32px;height:248px;padding:16px 24px;background:var(--n0);
+  border:1px solid var(--line);border-radius:var(--r-c);box-shadow:var(--shadow)}
+.bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;flex:1;height:100%}
+.bar{width:76px;height:var(--h);border-radius:var(--r-b) var(--r-b) 0 0;background:var(--n3);
+  transform:scaleY(0);transform-origin:bottom;transition:transform .5s var(--ease)}
+.bar.is-main{background:var(--acc)}
+.bar-col.in .bar{transform:scaleY(1)}
+.bar-lab{font-size:13px;color:var(--mut);text-align:center}
+.cost{font-weight:600;color:var(--ink);font-size:18px;font-variant-numeric:tabular-nums}
+.cost.warnc{color:var(--acc-ink)}
+
+/* slide 16 */
+.cards4{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.tool{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);padding:20px 24px;
+  box-shadow:var(--shadow);display:flex;gap:16px;align-items:flex-start}
+.tool .n{font-weight:600;font-size:17px;margin-bottom:4px}
+.tool .d{font-size:14px;color:var(--sec);line-height:1.4}
+
+/* slide 17 */
+.gauges{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+.gauge{width:144px;height:144px;border-radius:50%;
+  background:conic-gradient(var(--warn) 0 80%,var(--n3) 80% 100%);display:grid;place-items:center}
+.gauge-in{width:104px;height:104px;border-radius:50%;background:var(--n0);display:grid;place-items:center;
+  font-size:26px;font-weight:600;color:var(--warn);font-variant-numeric:tabular-nums}
+.quota{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);padding:16px;box-shadow:var(--shadow)}
+.qbar{height:12px;border-radius:var(--r-b);background:var(--n2);overflow:hidden;margin:12px 0}
+.qbar span{display:block;height:100%;width:100%;background:var(--acc);border-radius:var(--r-b);
+  transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.qbar.in span{transform:scaleX(1)}
+.btn{border:1px solid var(--acc);background:var(--n0);color:var(--acc-ink);border-radius:var(--r-b);
+  padding:8px 12px;font-weight:600;font-size:13px}
+.alertchip{display:inline-flex;gap:8px;align-items:center;background:var(--warn-soft);color:var(--warn);
+  border:1px solid var(--warn-line);border-radius:var(--r-b);padding:8px 12px;font-size:13px;font-weight:600}
+
+/* slide 18 */
+.stair{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.pill{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);padding:16px;
+  box-shadow:var(--shadow);font-size:14px;line-height:1.35;min-width:144px;flex:1;
+  display:flex;gap:12px;align-items:flex-start;margin-bottom:calc(var(--n) * 12px)}
+.pill .num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mut);font-weight:600;
+  font-variant-numeric:tabular-nums}
+.question{background:var(--acc-soft);border:1px solid var(--acc-line);border-radius:var(--r-c);
+  padding:16px 20px;font-size:17px;color:var(--acc-ink)}
+
+/* slide 19 */
+.quiz{display:grid;gap:12px}
+.qcard{background:var(--n0);border:1px solid var(--line);border-radius:var(--r-c);padding:16px 20px;box-shadow:var(--shadow)}
+.qtitle{font-weight:600;font-size:16px;margin-bottom:8px}
+.opts{display:flex;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--sec)}
+.opt{border:1px solid var(--line);border-radius:var(--r-b);padding:4px 12px;background:var(--n1)}
+.answer{margin-top:12px;font-weight:600;color:var(--acc-ink);font-size:15px;display:flex;gap:8px;align-items:center}
+
+/* UI */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--acc);
+  transform:scaleX(0);transform-origin:left;z-index:60;transition:transform .32s var(--ease)}
+.ui{position:fixed;right:24px;bottom:20px;display:flex;gap:8px;align-items:center;z-index:60}
+.btnui{width:40px;height:40px;border-radius:var(--r-b);border:1px solid var(--line);background:var(--n0);
+  color:var(--sec);box-shadow:var(--shadow);display:grid;place-items:center}
+.btnui:hover{border-color:var(--acc);color:var(--acc-ink)}
+.btnui:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.btnui.wide{width:auto;border-radius:var(--r-b);padding:0 16px;font-size:13px}
+.counter{font-size:13px;color:var(--mut);padding:0 8px;font-variant-numeric:tabular-nums}
+.hint{position:fixed;left:24px;bottom:24px;font-size:12px;color:var(--mut);z-index:60}
+#panel{position:fixed;left:0;right:0;bottom:0;max-height:42vh;overflow:auto;background:var(--n0);
+  border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(23,33,46,.06);z-index:70;
+  transform:translateY(105%);transition:transform .3s var(--ease);padding:16px 64px 24px}
+#panel.open{transform:none}
+#panelHead{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:8px}
+#panelTitle{font-size:13px;color:var(--acc-ink);font-weight:500}
+#panelBody{font-size:14px;line-height:1.55;color:var(--sec)}
+#panelBody p{margin:8px 0}
+#panelBody ul{margin:8px 0;padding-left:20px}
+.close{background:none;border:none;color:var(--mut);width:32px;height:32px;display:grid;place-items:center;border-radius:var(--r-b)}
+.close:hover{background:var(--n2);color:var(--ink)}
+
+@media(max-width:900px){
+  .slide{padding:32px 24px 72px}
+  .title-grid,.split{grid-template-columns:1fr;gap:24px}
+  .cards5{grid-template-columns:repeat(2,1fr)}
+  .pizzas,.flow,.steps4{grid-template-columns:repeat(2,1fr)}
+  #panel{padding:16px 24px}
+  .hint{display:none}
+}
+@media print{
+  .deck{height:auto;overflow:visible}
+  .slide{position:relative;inset:auto;opacity:1!important;visibility:visible!important;transform:none!important;
+    page-break-after:always;height:100vh;overflow:visible}
+  .frag{opacity:1!important;transform:none!important}
+  .rule,.bar,.qbar span{transform:none!important}
+  .progress,.ui,.hint,#panel{display:none!important}
+  .notes,.fiche{display:block!important;font-size:11px;color:var(--sec);margin-top:16px;
+    border-top:1px dashed var(--n3);padding-top:12px}
+}
+</style>
+</head>
+<body>
+
+<svg class='sprite' aria-hidden='true'>
+  <symbol id='i-cloud' viewBox='0 0 24 24'><path d='M7 18h10a4 4 0 0 0 .4-8A6 6 0 0 0 6 11.2 3.4 3.4 0 0 0 7 18Z'/></symbol>
+  <symbol id='i-cube' viewBox='0 0 24 24'><path d='m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z'/><path d='m4 7.5 8 4.5 8-4.5M12 12v9'/></symbol>
+  <symbol id='i-wallet' viewBox='0 0 24 24'><rect x='3' y='6' width='18' height='13' rx='3'/><path d='M16 12h3M3 9h18'/></symbol>
+  <symbol id='i-home' viewBox='0 0 24 24'><path d='m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9Z'/><path d='M9 21v-7h6v7'/></symbol>
+  <symbol id='i-drop' viewBox='0 0 24 24'><path d='M12 3s6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 6-10 6-10Z'/></symbol>
+  <symbol id='i-server' viewBox='0 0 24 24'><rect x='3' y='4' width='18' height='6' rx='2'/><rect x='3' y='14' width='18' height='6' rx='2'/><path d='M7 7h.01M7 17h.01'/></symbol>
+  <symbol id='i-chart' viewBox='0 0 24 24'><path d='M4 19V5M4 19h16'/><path d='m7 15 4-5 3 3 5-7'/></symbol>
+  <symbol id='i-shield' viewBox='0 0 24 24'><path d='M12 3 5 6v5c0 4.4 3 8.2 7 10 4-1.8 7-5.6 7-10V6l-7-3Z'/><path d='m9 12 2 2 4-4'/></symbol>
+  <symbol id='i-bell' viewBox='0 0 24 24'><path d='M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z'/><path d='M10 21h4'/></symbol>
+  <symbol id='i-tag' viewBox='0 0 24 24'><path d='M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9-9-9Z'/><circle cx='7.5' cy='7.5' r='1.2'/></symbol>
+  <symbol id='i-search' viewBox='0 0 24 24'><circle cx='11' cy='11' r='6'/><path d='m16 16 4 4'/></symbol>
+  <symbol id='i-menu' viewBox='0 0 24 24'><path d='M4 7h16M4 12h16M4 17h16'/></symbol>
+  <symbol id='i-grid' viewBox='0 0 24 24'><rect x='3' y='3' width='7' height='7' rx='1.5'/><rect x='14' y='3' width='7' height='7' rx='1.5'/><rect x='3' y='14' width='7' height='7' rx='1.5'/><rect x='14' y='14' width='7' height='7' rx='1.5'/></symbol>
+  <symbol id='i-db' viewBox='0 0 24 24'><ellipse cx='12' cy='6' rx='8' ry='3'/><path d='M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/></symbol>
+  <symbol id='i-network' viewBox='0 0 24 24'><circle cx='12' cy='5' r='2'/><circle cx='5' cy='18' r='2'/><circle cx='19' cy='18' r='2'/><path d='M12 7v5M5 16l6-4M19 16l-6-4M5 18h14'/></symbol>
+  <symbol id='i-spark' viewBox='0 0 24 24'><path d='M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18'/><circle cx='12' cy='12' r='3'/></symbol>
+  <symbol id='i-code' viewBox='0 0 24 24'><path d='m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14'/></symbol>
+  <symbol id='i-globe' viewBox='0 0 24 24'><circle cx='12' cy='12' r='9'/><path d='M3 12h18M12 3c2.6 2.5 4 5.6 4 9s-1.4 6.5-4 9c-2.6-2.5-4-5.6-4-9s1.4-6.5 4-9Z'/></symbol>
+  <symbol id='i-folder' viewBox='0 0 24 24'><path d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z'/></symbol>
+  <symbol id='i-clock' viewBox='0 0 24 24'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 2'/></symbol>
+  <symbol id='i-check' viewBox='0 0 24 24'><path d='m5 12 4 4L19 6'/></symbol>
+  <symbol id='i-alert' viewBox='0 0 24 24'><path d='M12 4 2.5 20h19L12 4Z'/><path d='M12 10v4M12 17h.01'/></symbol>
+  <symbol id='i-chat' viewBox='0 0 24 24'><path d='M20 15a3 3 0 0 1-3 3H9l-5 3V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v8Z'/></symbol>
+  <symbol id='i-user' viewBox='0 0 24 24'><circle cx='12' cy='8' r='3.5'/><path d='M5 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5'/></symbol>
+  <symbol id='i-mail' viewBox='0 0 24 24'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='m3 7 9 6 9-6'/></symbol>
+  <symbol id='i-doc' viewBox='0 0 24 24'><path d='M6 3h8l5 5v13H6z'/><path d='M14 3v5h5M9 13h7M9 17h7'/></symbol>
+
+  <symbol id='i-bulb' viewBox='0 0 24 24'><path d='M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .8 1.6h5.4c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 3Z'/></symbol>
+  <symbol id='i-left' viewBox='0 0 24 24'><path d='m14 6-6 6 6 6'/></symbol>
+  <symbol id='i-right' viewBox='0 0 24 24'><path d='m10 6 6 6-6 6'/></symbol>
+  <symbol id='i-refresh' viewBox='0 0 24 24'><path d='M20 11a8 8 0 1 0-2.3 6.4M20 5v6h-6'/></symbol>
+  <symbol id='i-expand' viewBox='0 0 24 24'><path d='M4 9V4h5M20 15v5h-5M4 4l6 6M20 20l-6-6'/></symbol>
+  <symbol id='i-close' viewBox='0 0 24 24'><path d='m6 6 12 12M18 6 6 18'/></symbol>
+</svg>
+
+<div class='progress' id='progress'></div>
+<main class='deck' id='deck'>
+
+<!-- ============ 1 ============ -->
+<section class='slide' data-title="Cloud Computing & Microsoft Azure">
+  <div class='title-grid'>
+    <div>
+      <div class='kicker frag'>Session d'introduction</div>
+      <h1 class='frag'>Cloud Computing <span class='amp'>&amp;</span><br>Microsoft Azure</h1>
+      <div class='rule frag'></div>
+      <p class='subtitle frag'>Comprendre les principes fondamentaux avant d'utiliser les services</p>
+      <p class='meta frag' style='margin-top:14px'>19 slides · ~50 min · public débutant</p>
+    </div>
+    <div class='stack'>
+      <h3 class='frag'>Objectifs de la session</h3>
+      <div class='card obj-card frag'><span class='obj-n'>01</span><span>Expliquer le cloud et ses trois modèles de services.</span></div>
+      <div class='card obj-card frag'><span class='obj-n'>02</span><span>Se repérer dans Azure : hiérarchie, services, Foundry.</span></div>
+      <div class='card obj-card frag'><span class='obj-n'>03</span><span>Anticiper facturation, surveillance et maîtrise des coûts.</span></div>
+    </div>
+  </div>
+  <aside class='notes' hidden>
+    <p>« Bonjour. Aujourd'hui, on démystifie deux choses : le cloud en général, et Microsoft Azure en particulier. On n'installe rien : on comprend pourquoi et comment les choses s'organisent avant de cliquer. »</p>
+    <p>Démarrage rapide : demandez « Qui utilise déjà OneDrive, Teams ou Outlook ? » Levez la main avec eux. Conclusion : « Vous utilisez déjà le cloud, souvent sans le savoir. »</p>
+    <p>Annoncez le rythme : 3 parties, ~50 minutes, 3 questions à la fin. Ne détaillez pas le sommaire : les objectifs suffisent.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Cloud Computing &amp; Microsoft Azure</p>
+    <h4>Contenu exact</h4><ul><li>Session d'introduction</li><li>3 objectifs de la session</li><li>19 slides · ~50 min · public débutant</li></ul>
+    <h4>Visuel / schéma</h4><p>Deux panneaux : grand titre à gauche avec trait cyan, trois cartes numérotées 01/02/03 à droite. Nuage en filigrane, aucune photo.</p>
+    <h4>Animation</h4><p>Fondu du titre (0,3 s), cartes en cascade (0,12 s), trait cyan tracé de gauche à droite.</p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class='slide' data-title="Qu'est-ce que le Cloud Computing">
+  <div class='kicker frag'>Partie 1 · Cloud Computing</div>
+  <h2 class='frag'>Le Cloud : des ressources à la demande</h2>
+  <p class='lead frag'>Le cloud = <strong>louer</strong> des ressources informatiques au lieu de les <strong>posséder</strong>.</p>
+  <div class='split'>
+    <ul class='clean'>
+      <li class='frag'>Des serveurs, stockage et logiciels via Internet.</li>
+      <li class='frag'>Vous payez à l'usage, sans acheter le matériel.</li>
+      <li class='frag'>Azure entretient l'infrastructure à votre place.</li>
+      <li class='frag'>Accessible depuis un navigateur, à tout moment.</li>
+    </ul>
+    <div class='analogy frag'>
+      <div class='panel old'><div class='t'>Avant — creuser son puits</div><div class='d'>Vous achetez, entretenez, et attendez s'il tarit.</div></div>
+      <div class='arrowline'></div>
+      <div class='panel new'><div class='t'>Aujourd'hui — ouvrir le robinet</div><div class='d'>L'eau arrive, vous payez ce que vous consommez.</div></div>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> un fichier sur OneDrive, ouvert sur PC, mobile et tablette.</span></div>
+  <aside class='notes' hidden>
+    <p>Analogie : « Avant, pour avoir de l'eau, vous creusiez votre puits : vous l'achetiez, vous l'entreteniez, et s'il n'y en avait plus, vous attendiez. Aujourd'hui, vous ouvrez un robinet : l'eau arrive, vous payez ce que vous consommez, et quelqu'un d'autre entretient le réseau. Le cloud, c'est exactement ça, mais avec des serveurs. »</p>
+    <p>Les 5 caractéristiques officielles, à citer oralement sans les projeter : libre-service à la demande, accès large par réseau, mutualisation des ressources, élasticité rapide, service mesuré.</p>
+    <p>Insistez sur « louer » plutôt que « acheter » : c'est le changement mental clé. Transition : « Si on achète plus de serveurs, comment ça se passe concrètement ? »</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Le Cloud : des ressources à la demande</p>
+    <h4>Contenu exact</h4><ul><li>Définition : louer au lieu de posséder</li><li>4 puces : serveurs via Internet, paiement à l'usage, maintenance déléguée, accès navigateur</li><li>Exemple : fichier OneDrive sur 3 appareils</li></ul>
+    <h4>Visuel / schéma</h4><p>Deux panneaux « puits » (gris) et « robinet » (bleu/cyan) reliés par une flèche.</p>
+    <h4>Animation</h4><p>Définition, puis puces, puis panneaux gauche/droite, puis encadré exemple.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class='slide' data-title="On-Premise vs Cloud">
+  <div class='kicker frag'>Partie 1 · Cloud Computing</div>
+  <h2 class='frag'>On-Premise vs Cloud : 4 différences clés</h2>
+  <div class='cmp'>
+    <div class='cmp-row frag'>
+      <div class='cmp-head'><svg class='ico'><use href='#i-server'/></svg>Critère</div>
+      <div class='cmp-head'><svg class='ico'><use href='#i-home'/></svg>On-Premise</div>
+      <div class='cmp-head' style='color:var(--acc-ink)'><svg class='ico'><use href='#i-cloud'/></svg>Cloud</div>
+    </div>
+    <div class='cmp-row frag'><div class='cmp-cell'>Coût</div><div class='cmp-cell'>Achat initial du matériel</div><div class='cmp-cell cloud'>Paiement à l'usage</div></div>
+    <div class='cmp-row frag'><div class='cmp-cell'>Maintenance</div><div class='cmp-cell'>Entièrement à votre charge</div><div class='cmp-cell cloud'>Gérée par le fournisseur</div></div>
+    <div class='cmp-row frag'><div class='cmp-cell'>Évolutivité</div><div class='cmp-cell'>Lente, à prévoir à l'avance</div><div class='cmp-cell cloud'>Rapide, à la demande</div></div>
+    <div class='cmp-row frag'><div class='cmp-cell'>Contrôle</div><div class='cmp-cell'>Maximum sur tout</div><div class='cmp-cell cloud'>Partagé avec Azure</div></div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> pic de trafic en solde → 10 serveurs supplémentaires en quelques minutes.</span></div>
+  <aside class='notes' hidden>
+    <p>On-Premise signifie « chez vous » : vos serveurs sont dans votre salle informatique. Vous achetez, branchez, mettez à jour, réparez. Dans le cloud, vous louez une capacité chez Microsoft.</p>
+    <p>Coût : expliquez CAPEX (gros investissement initial) contre OPEX (facture mensuelle). Nuance sur le contrôle : ce n'est pas « vous n'avez plus le contrôle », c'est un contrôle partagé — vous gardez données, accès et règles ; Microsoft gère la salle, l'électricité et le matériel.</p>
+    <p>Si un participant dit « le cloud coûte plus cher » : cela dépend de l'usage. Un serveur peu utilisé coûte souvent moins dans le cloud ; un serveur stable et saturé peut être moins cher en local (voir slide 15).</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>On-Premise vs Cloud : 4 différences clés</p>
+    <h4>Contenu exact</h4><ul><li>4 critères : coût, maintenance, évolutivité, contrôle</li><li>2 colonnes côte à côte</li><li>Exemple : pic de trafic → +10 serveurs</li></ul>
+    <h4>Visuel / schéma</h4><p>Tableau comparatif, colonne Cloud en bleu très pâle avec liseré cyan, colonne On-Premise en gris neutre. Aucune colonne orange.</p>
+    <h4>Animation</h4><p>Les 4 lignes apparaissent de haut en bas (0,12 s), coloration de la colonne Cloud, exemple en dernier.</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class='slide' data-title="IaaS PaaS SaaS qui gere quoi">
+  <div class='kicker frag'>Partie 1 · Cloud Computing</div>
+  <h2 class='frag'>IaaS, PaaS, SaaS : qui gère quoi ?</h2>
+  <div class='pizzas'>
+    <div class='pizza frag'><div class='pizza-name'>On-Premise</div><div class='layer me'>Application + données</div><div class='layer me'>Plateforme (OS)</div><div class='layer me'>Infrastructure</div><div class='crust'></div></div>
+    <div class='pizza frag'><div class='pizza-name'>IaaS</div><div class='layer me'>Application + données</div><div class='layer me'>Plateforme (OS)</div><div class='layer ms'>Infrastructure</div><div class='crust'></div></div>
+    <div class='pizza frag'><div class='pizza-name'>PaaS</div><div class='layer me'>Application + données</div><div class='layer ms'>Plateforme (OS)</div><div class='layer ms'>Infrastructure</div><div class='crust'></div></div>
+    <div class='pizza frag'><div class='pizza-name'>SaaS</div><div class='layer ms'>Application + données</div><div class='layer ms'>Plateforme (OS)</div><div class='layer ms'>Infrastructure</div><div class='crust'></div></div>
+  </div>
+  <div class='legend frag'><span><span class='sw' style='background:var(--acc)'></span>Vous gérez</span><span><span class='sw' style='background:var(--n2);border:1px solid var(--acc-line)'></span>Microsoft gère</span></div>
+  <ul class='clean'>
+    <li class='frag'><strong>IaaS</strong> → vous louez des machines virtuelles.</li>
+    <li class='frag'><strong>PaaS</strong> → vous déposez du code, sans serveur à gérer.</li>
+    <li class='frag'><strong>SaaS</strong> → vous utilisez un service prêt à l'emploi.</li>
+    <li class='frag'>Plus le service est haut, plus Azure gère.</li>
+  </ul>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> pizza maison → pâte livrée → pizza livrée → restaurant.</span></div>
+  <aside class='notes' hidden>
+    <p>La question à retenir est toujours la même : « qui gère quoi ? »</p>
+    <p>Métaphore : « On-Premise : vous achetez la farine, vous faites la pâte, vous cuisinez et vous nettoyez. IaaS : on vous livre la pâte, vous faites le reste. PaaS : on vous livre la pizza à cuire, vous la garnissez. SaaS : vous êtes au restaurant, vous choisissez votre pizza et vous mangez. »</p>
+    <p>Lien avec la slide 2 : plus on monte, plus on délègue, et plus on paie pour le service plutôt que pour la matière première.</p>
+    <p>Attention : ne pas dire « le PaaS n'a pas de serveur ». Les serveurs existent toujours ; c'est leur gestion qui est invisible pour vous.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>IaaS, PaaS, SaaS : qui gère quoi ?</p>
+    <h4>Contenu exact</h4><ul><li>IaaS → machines virtuelles</li><li>PaaS → déposer du code</li><li>SaaS → service prêt à l'emploi</li><li>Plus le service est haut, plus Azure gère</li><li>Exemple : pizza maison → pâte → pizza → restaurant</li></ul>
+    <h4>Visuel / schéma</h4><p>Quatre « pizzas » empilées (On-Premise, IaaS, PaaS, SaaS) avec 3 couches chacune : application, plateforme, infrastructure. Bleu = vous, cyan = Microsoft.</p>
+    <h4>Animation</h4><p>Empilement des couches de gauche à droite ; bascule progressive des couches en cyan ; légende en dernier.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class='slide' data-title="IaaS Azure Virtual Machines">
+  <div class='kicker frag'>Partie 1 · Cloud Computing</div>
+  <h2 class='frag'>IaaS · Azure Virtual Machines</h2>
+  <div class='split'>
+    <ul class='clean'>
+      <li class='frag'>Un serveur complet, mais virtuel.</li>
+      <li class='frag'>Vous choisissez l'OS, la taille, les disques.</li>
+      <li class='frag'>Vous gardez la main sur le système.</li>
+      <li class='frag'>Idéal pour migrer une application existante.</li>
+    </ul>
+    <div class='stack frag'>
+      <div class='card' style='display:flex;gap:18px;align-items:center'>
+        <svg class='ico'><use href='#i-server'/></svg>
+        <div><h3>Virtual Machine</h3><p class='note-small' style='margin-top:6px'>CPU · RAM · disques · Windows ou Linux</p></div>
+      </div>
+      <div class='card'>
+        <div class='note-small' style='font-weight:600;margin-bottom:8px'>Responsabilité partagée</div>
+        <div style='display:flex;height:34px;border-radius:9px;overflow:hidden;font-size:12px;color:#fff;text-align:center'>
+          <div style='flex:1;background:var(--acc);display:grid;place-items:center;padding:4px'>Vous : OS, logiciels, données</div>
+          <div style='flex:1;background:var(--sec);display:grid;place-items:center;padding:4px'>Azure : serveur, réseau, site</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> une VM Linux « B2s » pour héberger le site interne.</span></div>
+  <aside class='notes' hidden>
+    <p>Une machine virtuelle est un ordinateur logiciel : vous vous connectez dessus comme sur un serveur physique, avec les mêmes commandes. Azure fournit la machine, vous fournissez ce qu'il y a dedans.</p>
+    <p>À citer : les tailles (« B2s », « D4s_v5 ») combinent CPU et mémoire ; Windows et Linux sont disponibles ; on peut redimensionner sans réinstaller, mais il faut redémarrer.</p>
+    <p>Cas d'usage : « lift and shift », déplacer une application telle quelle sans la réécrire. Mise en garde : vous devez toujours appliquer les mises à jour de sécurité de l'OS.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>IaaS · Azure Virtual Machines</p>
+    <h4>Contenu exact</h4><ul><li>Serveur complet mais virtuel</li><li>Choix de l'OS, taille, disques</li><li>Vous gardez la main sur le système</li><li>Idéal pour migrer une application</li><li>Exemple : VM Linux B2s</li></ul>
+    <h4>Visuel / schéma</h4><p>Carte VM avec icône serveur et barre de responsabilité partagée (bleu / cyan).</p>
+    <h4>Animation</h4><p>Carte VM, puis CPU/RAM/disques/OS, puis remplissage de la barre de responsabilité.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class='slide' data-title="PaaS Azure App Service">
+  <div class='kicker frag'>Partie 1 · Cloud Computing</div>
+  <h2 class='frag'>PaaS · Azure App Service</h2>
+  <div class='split'>
+    <ul class='clean'>
+      <li class='frag'>Vous déposez votre code, Azure l'exécute.</li>
+      <li class='frag'>Aucun OS ni serveur à administrer.</li>
+      <li class='frag'>Déploiement et montée en charge intégrés.</li>
+      <li class='frag'>Idéal pour un site web ou une API.</li>
+    </ul>
+    <div class='stack frag'>
+      <div class='card' style='display:flex;align-items:center;gap:14px;flex-wrap:wrap'>
+        <div style='display:flex;align-items:center;gap:8px'><svg class='ico'><use href='#i-code'/></svg><strong>Votre code</strong></div>
+        <span style='color:var(--n3);font-size:24px'>→</span>
+        <div style='display:flex;align-items:center;gap:8px'><svg class='ico'><use href='#i-cloud'/></svg><strong>App Service</strong></div>
+        <span class='badge-warn' style='background:var(--acc-soft);color:var(--acc-ink);border-color:var(--acc-line)'>Pas de serveur à gérer</span>
+      </div>
+      <div class='card'>
+        <div class='note-small' style='font-weight:600;margin-bottom:10px'>Montée en charge</div>
+        <div style='display:flex;gap:10px'>
+          <span class='badge-warn' style='background:var(--acc-soft);color:var(--acc-ink);border-color:var(--acc-line)'>Instance 1</span>
+          <span class='badge-warn' style='background:var(--acc-soft);color:var(--acc-ink);border-color:var(--acc-line)'>Instance 2</span>
+          <span class='badge-warn' style='background:var(--acc-soft);color:var(--acc-ink);border-color:var(--acc-line)'>+ instance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> publier une API Python en un simple <code>git push</code>.</span></div>
+  <aside class='notes' hidden>
+    <p>On ne parle plus de machine virtuelle : on donne son code à Azure et Azure s'occupe du reste. C'est le modèle PaaS.</p>
+    <p>Langages (citations orales) : .NET, Node.js, Python, Java, PHP, Ruby. Fonctionnalités utiles : déploiement depuis Git, « slots » pour tester avant la production, certificats SSL gérés, mise à l'échelle automatique.</p>
+    <p>Phrase-clé à faire répéter : « Je livre le code, Microsoft livre l'environnement. » Si quelqu'un demande un logiciel spécial, évoquez les conteneurs sans entrer dans les détails.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>PaaS · Azure App Service</p>
+    <h4>Contenu exact</h4><ul><li>Vous déposez votre code, Azure l'exécute</li><li>Aucun OS ni serveur à administrer</li><li>Déploiement et montée en charge intégrés</li><li>Idéal pour site web ou API</li><li>Exemple : API Python en git push</li></ul>
+    <h4>Visuel / schéma</h4><p>Flux code → App Service avec badge « Pas de serveur à gérer », puis vignettes d'instances supplémentaires.</p>
+    <h4>Animation</h4><p>Le code glisse vers App Service, le badge s'allume, les instances apparaissent une à une.</p>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section class='slide' data-title="SaaS Microsoft 365">
+  <div class='kicker frag'>Partie 1 · Cloud Computing</div>
+  <h2 class='frag'>SaaS · Microsoft 365</h2>
+  <div class='split'>
+    <ul class='clean'>
+      <li class='frag'>Un service complet, prêt à l'emploi.</li>
+      <li class='frag'>Rien à installer sur un serveur.</li>
+      <li class='frag'>Mises à jour automatiques par Microsoft.</li>
+      <li class='frag'>Chaque utilisateur possède un compte.</li>
+    </ul>
+    <div class='stack frag'>
+      <div style='display:grid;grid-template-columns:repeat(3,1fr);gap:12px'>
+        <div class='card' style='text-align:center'><svg class='ico' style='margin:auto'><use href='#i-mail'/></svg><h3 style='margin-top:10px'>Outlook</h3></div>
+        <div class='card' style='text-align:center'><svg class='ico' style='margin:auto'><use href='#i-chat'/></svg><h3 style='margin-top:10px'>Teams</h3></div>
+        <div class='card' style='text-align:center'><svg class='ico' style='margin:auto'><use href='#i-doc'/></svg><h3 style='margin-top:10px'>Word</h3></div>
+      </div>
+      <div class='card' style='display:flex;align-items:center;gap:10px'><svg class='ico'><use href='#i-user'/></svg><strong>Un compte utilisateur</strong><span style='color:var(--n3)'>→</span><span class='note-small'>3 services, 1 connexion</span></div>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> Outlook, Teams et Word ouverts dans le navigateur.</span></div>
+  <aside class='notes' hidden>
+    <p>C'est le modèle que tout le monde connaît déjà : vous vous connectez, vous utilisez, vous n'administrez rien. C'est le SaaS.</p>
+    <p>Microsoft 365 regroupe bien d'autres services (SharePoint, OneDrive, Exchange, Planner…) : on en montre trois pour l'exemple.</p>
+    <p>Même en SaaS, il reste des responsabilités côté client : qui a accès à quoi, quelles données sont stockées, combien de licences sont payées. Ce sera le thème de la partie 3. Ce slide est volontairement court.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>SaaS · Microsoft 365</p>
+    <h4>Contenu exact</h4><ul><li>Service complet prêt à l'emploi</li><li>Rien à installer sur serveur</li><li>Mises à jour automatiques</li><li>Un compte par utilisateur</li><li>Exemple : Outlook, Teams, Word dans le navigateur</li></ul>
+    <h4>Visuel / schéma</h4><p>Trois tuiles arrondies avec icônes ligne (e-mail, chat, document) reliées à un badge « utilisateur ».</p>
+    <h4>Animation</h4><p>Tuiles en cascade (0,12 s), puis lignes de connexion vers le badge utilisateur.</p>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section class='slide' data-title="Cloud 4 avantages 4 limites">
+  <div class='kicker frag'>Partie 1 · Cloud Computing</div>
+  <h2 class='frag'>Cloud : 4 avantages, 4 limites</h2>
+  <div class='split'>
+    <div class='card frag' style='border-top:4px solid var(--acc)'>
+      <h3 style='color:var(--acc-ink);margin-bottom:16px'>Avantages</h3>
+      <ul class='clean'>
+        <li>Coût ajusté à l'usage réel</li><li>Montée en charge rapide</li>
+        <li>Maintenance déléguée</li><li>Accès depuis partout</li>
+      </ul>
+    </div>
+    <div class='card frag' style='border-top:4px solid var(--n3)'>
+      <h3 style='color:var(--sec);margin-bottom:16px'>Limites</h3>
+      <ul class='clean limits'>
+        <li>Dépendance au fournisseur</li>
+        <li>Coûts imprévisibles si mal suivis</li>
+        <li>Compétences et sécurité à maîtriser</li>
+        <li>Données : résidence et conformité</li>
+      </ul>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> une VM oubliée allumée le week-end coûte quand même.</span></div>
+  <aside class='notes' hidden>
+    <p>Je veux donner une image équilibrée : le cloud n'est pas magique. Il déplace une partie du travail, il ne le supprime pas.</p>
+    <p>Dépendance : le « verrouillage » — plus vos données et outils sont spécifiques à un fournisseur, plus il est difficile de partir. Coûts : une ressource oubliée continue de facturer. Compétences : il faut savoir configurer accès, réseaux, sécurité. Données : certains pays imposent la résidence sur leur territoire, d'où le choix de la région (slide 9).</p>
+    <p>Transition : « Passons à la plateforme concrète qui va nous servir de fil conducteur : Microsoft Azure. »</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Cloud : 4 avantages, 4 limites</p>
+    <h4>Contenu exact</h4><ul><li>Avantages : coût, évolutivité, maintenance, accès</li><li>Limites : dépendance, coûts, compétences, données</li><li>Exemple : VM oubliée le week-end</li></ul>
+    <h4>Visuel / schéma</h4><p>Deux colonnes symétriques : bleu Azure à gauche, seul accent orange à droite pour les limites.</p>
+    <h4>Animation</h4><p>Colonne avantages depuis la gauche, colonne limites depuis la droite, exemple au centre en dernier.</p>
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section class='slide' data-title="Microsoft Azure le cloud de Microsoft">
+  <div class='kicker frag'>Partie 2 · Découverte de Microsoft Azure</div>
+  <h2 class='frag'>Microsoft Azure : le cloud de Microsoft</h2>
+  <p class='lead frag'>Une plateforme cloud qui héberge applications, données et IA.</p>
+  <div class='split'>
+    <ul class='clean'>
+      <li class='frag'>Plus de 200 services disponibles.</li>
+      <li class='frag'>80+ régions annoncées dans le monde.</li>
+      <li class='frag'>3 zones de disponibilité par région équipée.</li>
+      <li class='frag'>Un portail unique pour tout créer.</li>
+    </ul>
+    <div class='stack'>
+      <div class='stats frag'>
+        <div class='stat'><div class='n'>200+</div><div class='l'>services</div></div>
+        <div class='stat'><div class='n'>80+</div><div class='l'>régions</div></div>
+        <div class='stat'><div class='n'>3</div><div class='l'>zones / région</div></div>
+      </div>
+      <div class='card frag' style='display:flex;gap:12px;align-items:center'>
+        <svg class='ico'><use href='#i-globe'/></svg>
+        <div><strong>Une région près de chez vous</strong><div class='note-small' style='margin-top:4px'>Exemple : France Central · West Europe</div></div>
+      </div>
+    </div>
+  </div>
+  <p class='note-small frag'>Chiffres indicatifs — page « Infrastructure globale », novembre 2026.</p>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> héberger le site et sa base de données dans « France Central ».</span></div>
+  <aside class='notes' hidden>
+    <p>Azure, c'est la plateforme cloud de Microsoft : plus de 200 services, des centres de données répartis dans le monde, et un portail unique.</p>
+    <p>Définissez oralement les trois niveaux : une <strong>géographie</strong> regroupe des régions qui respectent des règles locales (ex. France, Europe) ; une <strong>région</strong> est un ensemble de centres de données (France Central, West Europe) à choisir proche des utilisateurs ; une <strong>zone de disponibilité</strong> est un centre distinct avec courant, réseau et refroidissement propres — quand une région en propose, il y en a 3.</p>
+    <p>« 80+ régions » vient de la page Azure global infrastructure consultée le 23/11/2026 ; chiffre évolutif, d'où la mention « indicatif ». Ne citez pas de nombre de datacenters (sources 400+ / 500+).</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Microsoft Azure : le cloud de Microsoft</p>
+    <h4>Contenu exact</h4><ul><li>200+ services, 80+ régions, 3 zones de disponibilité</li><li>Un portail unique</li><li>Exemple : site + base dans France Central</li></ul>
+    <h4>Visuel / schéma</h4><p>Trois cartes de chiffres (200+, 80+, 3) et carte mondiale simplifiée en points bleu clair.</p>
+    <h4>Animation</h4><p>Les chiffres comptent de 0 à leur valeur (0,6 s), points de la carte progressifs, note de pied en dernier.</p>
+  </div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section class='slide' data-title="Abonnement groupe de ressources ressources">
+  <div class='kicker frag'>Partie 2 · Découverte de Microsoft Azure</div>
+  <h2 class='frag'>Abonnement → Groupe de ressources → Ressources</h2>
+  <div class='split'>
+    <ul class='clean'>
+      <li class='frag'><strong>Abonnement</strong> : facturation, accès et limites.</li>
+      <li class='frag'><strong>Groupe de ressources</strong> : périmètre de gestion.</li>
+      <li class='frag'><strong>Ressource</strong> : un service concret créé.</li>
+      <li class='frag'>Tout s'organise en arborescence.</li>
+    </ul>
+    <div class='tree'>
+      <div class='node sub frag'><svg class='ico'><use href='#i-wallet'/></svg><strong>Abonnement Entreprise</strong></div>
+      <div class='branch'>
+        <div class='node frag' style='border-color:var(--sec)'><svg class='ico'><use href='#i-folder'/></svg><strong>RG-Projet-Web</strong></div>
+        <div class='branch' style='margin-left:10px'>
+          <div class='node res frag'><svg class='ico'><use href='#i-server'/></svg>VM-Web-01</div>
+          <div class='node res frag'><svg class='ico'><use href='#i-db'/></svg>SQL-DB-01</div>
+          <div class='node res frag'><svg class='ico'><use href='#i-network'/></svg>VNet-Projet</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> supprimer <code>RG-Projet-Web</code> supprime ses 3 ressources. <span class='badge-warn' style='margin-left:8px'>suppression</span></span></div>
+  <aside class='notes' hidden>
+    <p>L'abonnement est le niveau le plus haut : c'est là que la facture arrive, que les droits d'accès sont donnés et que les quotas s'appliquent. Dedans, on crée des groupes de ressources : des dossiers logiques, pas physiques. Et dedans, les ressources : une VM, une base, un réseau.</p>
+    <p>À citer : un groupe peut contenir des ressources de régions différentes, mais on recommande de le gerer par projet et par région. Le nom RG-Projet-Web est une convention : préfixe RG-, puis le projet.</p>
+    <p>Mise en garde importante : supprimer un groupe supprime tout ce qu'il contient, sans corbeille. Dites-le clairement, c'est une erreur classique.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Abonnement → Groupe de ressources → Ressources</p>
+    <h4>Contenu exact</h4><ul><li>Abonnement : facturation, accès, limites</li><li>Groupe : périmètre de gestion</li><li>Ressource : service concret</li><li>Arborescence</li><li>Exemple : Abonnement Entreprise &gt; RG-Projet-Web &gt; VM + base + réseau</li></ul>
+    <h4>Visuel / schéma</h4><p>Arborescence en 3 niveaux avec traits de liaison cyan et icônes ligne (portefeuille, dossier, serveur, base, réseau).</p>
+    <h4>Animation</h4><p>Abonnement, puis trait vers le groupe, puis traits et 3 ressources une par une, puis avertissement orange.</p>
+  </div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section class='slide' data-title="Principaux services Azure par categorie">
+  <div class='kicker frag'>Partie 2 · Découverte de Microsoft Azure</div>
+  <h2 class='frag'>Les grands services Azure en 5 cartes</h2>
+  <div class='cards5'>
+    <div class='card5 frag'><svg class='ico'><use href='#i-server'/></svg><span class='cat'>Calcul</span><span class='srv'>Virtual Machines</span><span class='d'>Des serveurs à la demande</span></div>
+    <div class='card5 frag'><svg class='ico'><use href='#i-db'/></svg><span class='cat'>Stockage</span><span class='srv'>Blob Storage</span><span class='d'>Fichiers et objets à grande échelle</span></div>
+    <div class='card5 frag'><svg class='ico'><use href='#i-network'/></svg><span class='cat'>Réseau</span><span class='srv'>Virtual Network</span><span class='d'>Un réseau privé dans Azure</span></div>
+    <div class='card5 frag'><svg class='ico'><use href='#i-db'/></svg><span class='cat'>Bases de données</span><span class='srv'>Azure SQL Database</span><span class='d'>Une base gérée, sans serveur</span></div>
+    <div class='card5 ai frag'><svg class='ico'><use href='#i-spark'/></svg><span class='cat'>IA</span><span class='srv'>Microsoft Foundry</span><span class='d'>Modèles et agents sur une plateforme</span></div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> VM + Virtual Network + SQL = le socle d'une application web.</span></div>
+  <aside class='notes' hidden>
+    <p>Ce n'est pas une liste exhaustive : Azure propose plus de 200 services. Voici cinq familles pour construire un repère mental.</p>
+    <p>Calcul : Azure Functions (sans serveur), conteneurs. Stockage : Blob = objets ; Files, Queue, Table. Réseau : Virtual Network isole les ressources ; passerelle, équilibreur, DNS. Bases de données : Azure SQL est « managed » (sauvegardes et mises à jour gérées) ; Cosmos DB pour le NoSQL. IA : on s'arrête ici, c'est le sujet suivant.</p>
+    <p>Insistez sur la combinaison : « on ne choisit pas un service, on assemble un petit ensemble cohérent ».</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Les grands services Azure en 5 cartes</p>
+    <h4>Contenu exact</h4><ul><li>Calcul → Virtual Machines</li><li>Stockage → Blob Storage</li><li>Réseau → Virtual Network</li><li>Bases de données → Azure SQL Database</li><li>IA → Microsoft Foundry</li><li>Exemple : VM + VNet + SQL</li></ul>
+    <h4>Visuel / schéma</h4><p>Cinq cartes verticales avec icône ligne, catégorie, service phare et rôle en une ligne. Icône IA en cyan.</p>
+    <h4>Animation</h4><p>Cartes de gauche à droite (0,1 s), puis liseré cyan sur les cartes 1, 3 et 4 avec l'exemple.</p>
+  </div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section class='slide' data-title="Microsoft Foundry construire des solutions d IA">
+  <div class='kicker frag'>Partie 2 · Découverte de Microsoft Azure</div>
+  <h2 class='frag'>Microsoft Foundry : construire des solutions d'IA</h2>
+  <ul class='clean'>
+    <li class='frag'>Une plateforme unifiée pour modèles et agents.</li>
+    <li class='frag'>Catalogue de plus de 10 000 modèles.</li>
+    <li class='frag'>Un agent = modèle + instructions + outils.</li>
+    <li class='frag'>Évaluation, suivi et gouvernance intégrés.</li>
+  </ul>
+  <div class='flow'>
+    <div class='flow-step frag'><svg class='ico'><use href='#i-grid'/></svg><div class='s'>Catalogue de modèles</div></div>
+    <div class='flow-step frag'><svg class='ico'><use href='#i-spark'/></svg><div class='s'>Créer un agent</div></div>
+    <div class='flow-step frag'><svg class='ico'><use href='#i-cloud'/></svg><div class='s'>Déployer</div></div>
+    <div class='flow-step frag'><svg class='ico'><use href='#i-check'/></svg><div class='s'>Évaluer</div></div>
+  </div>
+  <div class='band frag'>Identité, réseau et stratégies : un seul cadre de gestion</div>
+  <p class='note-small frag'>Repère : anciennement « Azure AI Foundry » (renommé en 2025).</p>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> choisir un modèle, puis lui connecter la FAQ de l'entreprise.</span></div>
+  <aside class='notes' hidden>
+    <p>Informations vérifiées le 23/11/2026 sur Microsoft Learn (page « What is Microsoft Foundry ? », mise à jour septembre 2026) :</p>
+    <ul>
+      <li>Microsoft Foundry est le nouveau nom d'Azure AI Foundry, annoncé à Ignite 2025. L'ancien portail s'appelle « Foundry (classic) » ; les nouveaux projets utilisent le portail actuel (ai.azure.com).</li>
+      <li>La plateforme réunit agents, modèles et outils dans une seule ressource Azure, avec gestion unifiée des identités (Microsoft Entra), des accès (RBAC), du réseau et des stratégies (Azure Policy).</li>
+      <li>Le catalogue donne accès à plus de 10 000 modèles (Microsoft, OpenAI, Anthropic, Meta, autres).</li>
+      <li>Un agent = modèle + instructions + outils. Deux formes : prompt agent (déclaratif, sans code) et hosted agent (votre code dans un environnement géré).</li>
+      <li>Évaluation : qualité, pertinence, « groundedness », sécurité ; avant déploiement ou sur des traces de production. Observabilité : suivi (tracing) et tableaux de bord, certains en prévisualisation.</li>
+      <li>Les rôles RBAC ont été renommés (Foundry User, Foundry Owner…) : ne dites pas « Azure AI User ».</li>
+    </ul>
+    <p>Ce slide est le plus dense : restez sur les 4 puces affichées. Si on demande « Foundry remplace-t-il Azure OpenAI ? » : les ressources Azure OpenAI peuvent être mises à niveau vers une ressource Foundry en conservant endpoint et clés ; Foundry englobe bien plus que l'inférence.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Microsoft Foundry : construire des solutions d'IA</p>
+    <h4>Contenu exact</h4><ul><li>Plateforme unifiée modèles + agents</li><li>Plus de 10 000 modèles</li><li>Agent = modèle + instructions + outils</li><li>Évaluation, suivi, gouvernance</li><li>Anciennement Azure AI Foundry (2025)</li><li>Exemple : modèle + FAQ de l'entreprise</li></ul>
+    <h4>Visuel / schéma</h4><p>Pipeline en 4 blocs : Catalogue → Créer un agent → Déployer → Évaluer, avec bandeau gouvernance.</p>
+    <h4>Animation</h4><p>Blocs de gauche à droite, flèches tracées entre eux, bandeau gouvernance en dernier.</p>
+  </div>
+</section>
+
+<!-- ============ 13 ============ -->
+<section class='slide' data-title="Scenario chatbot de support client">
+  <div class='kicker frag'>Partie 2 · Découverte de Microsoft Azure</div>
+  <h2 class='frag'>Scénario : un chatbot de support client</h2>
+  <div class='chatflow'>
+    <div class='bubble q frag' style='justify-self:start'><svg class='ico' style='display:inline;vertical-align:-5px;margin-right:8px'><use href='#i-chat'/></svg>« Où est ma commande ? »</div>
+    <div class='steps4'>
+      <div class='stepbox frag'><div class='num'>01</div>Choisir un modèle dans le catalogue.</div>
+      <div class='stepbox frag'><div class='num'>02</div>Créer un agent avec les procédures FAQ.</div>
+      <div class='stepbox frag'><div class='num'>03</div>Connecter la base de connaissances.</div>
+      <div class='stepbox frag'><div class='num'>04</div>Tester, évaluer, puis publier.</div>
+    </div>
+    <div class='frag' style='display:flex;align-items:center;gap:12px;flex-wrap:wrap'>
+      <span class='badge-warn'>À évaluer avant publication</span>
+      <div class='bubble a' style='justify-self:end;margin-left:auto'><svg class='ico' style='display:inline;vertical-align:-5px;margin-right:8px'><use href='#i-check'/></svg>Réponse sourcée, ou transfert à un conseiller</div>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> « Où est ma commande ? » → réponse sourcée, ou transfert à un conseiller.</span></div>
+  <aside class='notes' hidden>
+    <p>Une entreprise veut un chatbot pour les questions fréquentes. Dans Foundry, elle ne part pas d'une page blanche : elle choisit un modèle, donne des instructions, branche sa FAQ, puis teste avant de publier.</p>
+    <p>Détails : les outils peuvent interroger une base de connaissances ou appeler un système interne (suivi de commande). L'évaluation compare plusieurs versions avec des jeux de test ; on regarde notamment si la réponse est ancrée dans la documentation (groundedness) et si la tâche est accomplie. Le transfert vers un humain est une bonne pratique.</p>
+    <p>Ce scénario montre que « créer un agent » ne veut pas dire « coder beaucoup » : un prompt agent se configure dans le portail.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Scénario : un chatbot de support client</p>
+    <h4>Contenu exact</h4><ul><li>Choisir un modèle dans le catalogue</li><li>Créer un agent avec les procédures FAQ</li><li>Connecter la base de connaissances</li><li>Tester, évaluer, puis publier</li><li>Exemple : réponse sourcée ou transfert</li></ul>
+    <h4>Visuel / schéma</h4><p>Bulle de question, 4 étapes numérotées reliées, badge orange « À évaluer », bulle de réponse avec coche.</p>
+    <h4>Animation</h4><p>Question, puis étapes 1 à 4, puis badge orange, puis réponse et coche.</p>
+  </div>
+</section>
+
+<!-- ============ 14 ============ -->
+<section class='slide' data-title="Azure Portal votre tableau de bord">
+  <div class='kicker frag'>Partie 3 · Gestion et facturation</div>
+  <h2 class='frag'>Azure Portal : votre tableau de bord</h2>
+  <ul class='clean' style='grid-template-columns:1fr 1fr;gap:8px 26px'>
+    <li class='frag'>L'interface web pour gérer toutes vos ressources.</li>
+    <li class='frag'>Une recherche globale en haut de l'écran.</li>
+    <li class='frag'>Un menu de gauche : tous les services.</li>
+    <li class='frag'>Une page d'accueil avec favoris et vue d'ensemble.</li>
+  </ul>
+  <div class='portal frag'>
+    <div class='portal-top'>
+      <svg class='ico'><use href='#i-cloud'/></svg>
+      <div class='search'><svg class='ico'><use href='#i-search'/></svg>Rechercher un service, une ressource, une aide…</div>
+      <svg class='ico'><use href='#i-user'/></svg>
+    </div>
+    <div class='portal-body'>
+      <div class='portal-side'>
+        <div class='side-item'><svg class='ico'><use href='#i-menu'/></svg>Tous les services</div>
+        <div class='side-item'><svg class='ico'><use href='#i-folder'/></svg>Groupes de ressources</div>
+        <div class='side-item'><svg class='ico'><use href='#i-grid'/></svg>Tableau de bord</div>
+        <div class='side-item'><svg class='ico'><use href='#i-wallet'/></svg>Coûts</div>
+      </div>
+      <div class='portal-main'>
+        <div class='tile'>Ressources <b>12</b></div>
+        <div class='tile'>Coûts du mois <b>248 €</b></div>
+        <div class='tile'>Alertes <b>2 actives</b></div>
+        <div class='tile'>Santé <b>OK</b></div>
+      </div>
+    </div>
+    <div class='callout c1 frag'>1</div><div class='callout c2 frag'>2</div>
+    <div class='callout c3 frag'>3</div><div class='callout c4 frag'>4</div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> chercher « VM » → ouvrir la machine → lire son coût estimé.</span></div>
+  <aside class='notes' hidden>
+    <p>Le portail est la porte d'entrée : on s'y connecte avec un navigateur et on y trouve toutes les ressources de tous les abonnements auxquels on a accès.</p>
+    <p>À montrer ou décrire : la barre de recherche trouve un service, une ressource, un document d'aide ; le menu « Toutes les ressources » liste ce qui existe ; le volet d'une VM affiche les métriques et, dans « Coûts », une estimation.</p>
+    <p>Mentionnez le Cloud Shell (terminal dans le navigateur) et les interfaces en ligne de commande : le portail est pratique pour débuter, les scripts le sont pour répéter. Pas de démo longue ici.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Azure Portal : votre tableau de bord</p>
+    <h4>Contenu exact</h4><ul><li>Interface web de gestion</li><li>Recherche globale en haut</li><li>Menu de gauche des services</li><li>Page d'accueil : favoris et vue d'ensemble</li><li>Exemple : chercher VM → coût estimé</li></ul>
+    <h4>Visuel / schéma</h4><p>Maquette annotée : barre de recherche (1), menu des services (2), tableau de bord (3), volet de ressource (4).</p>
+    <h4>Animation</h4><p>Maquette en fondu, puis annotations 1, 2, 3, 4 avec traits de rappel.</p>
+  </div>
+</section>
+
+<!-- ============ 15 ============ -->
+<section class='slide' data-title="Pay as you go payer a l usage">
+  <div class='kicker frag'>Partie 3 · Gestion et facturation</div>
+  <h2 class='frag'>Pay-as-you-go : payer à l'usage</h2>
+  <p class='lead frag'><strong>Principe :</strong> le coût suit le temps d'utilisation et les ressources consommées.</p>
+  <div class='split'>
+    <div class='stack'>
+      <div class='card frag' style='display:flex;gap:12px;align-items:center'>
+        <svg class='ico'><use href='#i-clock'/></svg><strong>Tarif simplifié : 0,10 € / heure de VM</strong>
+      </div>
+      <div class='card frag'>
+        <table style='width:100%;border-collapse:collapse;font-size:15px'>
+          <tr style='border-bottom:1px solid var(--line)'><td style='padding:8px 4px'>8 h/jour, 22 jours</td><td>176 h</td><td style='text-align:right;font-weight:600;color:var(--acc-ink)'>17,60 €</td></tr>
+          <tr style='border-bottom:1px solid var(--line)'><td style='padding:8px 4px'>24 h/jour, 30 jours</td><td>720 h</td><td style='text-align:right;font-weight:600;color:var(--acc-ink)'>72,00 €</td></tr>
+          <tr><td style='padding:8px 4px;font-weight:600'>Écart</td><td>—</td><td style='text-align:right;font-weight:600;color:var(--acc-ink)'>≈ 54 € / mois</td></tr>
+        </table>
+      </div>
+      <p class='note-small frag'>Tarif fictif, choisi pour comprendre le principe.</p>
+    </div>
+    <div class='bars frag'>
+      <div class='bar-col frag' style='--h:70px'>
+        <div class='cost'>17,60 €</div><div class='bar'></div><div class='bar-lab'>8 h/jour<br>176 h</div>
+      </div>
+      <div class='bar-col frag' style='--h:205px'>
+        <div class='cost warnc'>72,00 €</div><div class='bar is-main'></div><div class='bar-lab'>24 h/jour<br>720 h</div>
+      </div>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> éteindre les VM de test le soir réduit directement la facture.</span></div>
+  <aside class='notes' hidden>
+    <p>Pay-as-you-go, littéralement « payez pendant que vous l'utilisez ». On ne paie pas une machine pour un mois entier si on ne s'en sert que 8 heures par jour. Le calcul est volontairement simplifié à 0,10 € de l'heure.</p>
+    <p>Vérifiez les calculs à l'oral : 8 × 22 = 176 h → 17,60 € ; 24 × 30 = 720 h → 72 € ; écart 54,40 €, arrondi à ≈ 54 €.</p>
+    <p>Nuances : le prix réel dépend de la taille de la VM, de la région, du système d'exploitation et des remises (réservations, instances spot). Arrêter une VM supprime la facturation du calcul, mais le disque continue d'être facturé. Présentez le calculateur de prix Azure comme outil à utiliser avant création.</p>
+    <p>Ne donnez pas de chiffre officiel : le tarif est explicitement fictif.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Pay-as-you-go : payer à l'usage</p>
+    <h4>Contenu exact</h4><ul><li>Principe : coût = temps × ressources</li><li>Tarif fictif 0,10 €/h</li><li>8 h/j × 22 j = 176 h → 17,60 €</li><li>24 h/j × 30 j = 720 h → 72,00 €</li><li>Écart ≈ 54 €/mois</li><li>Exemple : éteindre les VM de test</li></ul>
+    <h4>Visuel / schéma</h4><p>Deux barres (courte 8 h, haute 24 h) avec coûts qui montent ; la barre haute passe en orange pour le surcoût.</p>
+    <h4>Animation</h4><p>Tarif, puis barre 176 h avec coût compté, puis barre 720 h, puis écart orange et exemple.</p>
+  </div>
+</section>
+
+<!-- ============ 16 ============ -->
+<section class='slide' data-title="4 outils pour garder le controle">
+  <div class='kicker frag'>Partie 3 · Gestion et facturation</div>
+  <h2 class='frag'>4 outils pour garder le contrôle</h2>
+  <div class='cards4'>
+    <div class='tool frag'><svg class='ico'><use href='#i-chart'/></svg><div><div class='n'>Azure Monitor</div><div class='d'>Métriques et journaux au même endroit.</div></div></div>
+    <div class='tool frag'><svg class='ico'><use href='#i-bell'/></svg><div><div class='n'>Alertes</div><div class='d'>Un message quand un seuil est dépassé.</div></div></div>
+    <div class='tool frag'><svg class='ico'><use href='#i-tag'/></svg><div><div class='n'>Tags</div><div class='d'>Des étiquettes pour retrouver et classer.</div></div></div>
+    <div class='tool frag'><svg class='ico'><use href='#i-shield'/></svg><div><div class='n'>Azure Policy</div><div class='d'>Des règles appliquées à tout l'abonnement.</div></div></div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> une alerte à 80 % de CPU prévient l'équipe par e-mail.</span></div>
+  <aside class='notes' hidden>
+    <p>Une phrase par outil, à développer oralement :</p>
+    <ul>
+      <li>Azure Monitor : plateforme de télémétrie — métriques (CPU, mémoire, requêtes), journaux, tableaux de bord. C'est la source des informations.</li>
+      <li>Alertes : une condition (« CPU &gt; 80 % pendant 10 minutes ») et une action (e-mail, Teams, webhook). L'alerte prévient, elle ne corrige pas.</li>
+      <li>Tags : paires clé/valeur, par exemple projet=web et environnement=test. Servent à retrouver des ressources et répartir les coûts.</li>
+      <li>Azure Policy : règles « doit être » — interdire des régions, exiger un tag. La politique peut auditer ou refuser une création.</li>
+    </ul>
+    <p>Ordre logique : Monitor observe, Alertes prévient, Tags classe, Policy impose.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>4 outils pour garder le contrôle</p>
+    <h4>Contenu exact</h4><ul><li>Azure Monitor → métriques et journaux</li><li>Alertes → message si seuil dépassé</li><li>Tags → retrouver et classer</li><li>Azure Policy → règles sur l'abonnement</li><li>Exemple : alerte à 80 % de CPU</li></ul>
+    <h4>Visuel / schéma</h4><p>4 cartes 2×2 avec icônes ligne : graphique, cloche, étiquette, bouclier.</p>
+    <h4>Animation</h4><p>Cartes en diagonal, haut-gauche vers bas-droite ; la cloche s'anime une seule fois avec l'exemple.</p>
+  </div>
+</section>
+
+<!-- ============ 17 ============ -->
+<section class='slide' data-title="Couts et quotas eviter les surprises">
+  <div class='kicker frag'>Partie 3 · Gestion et facturation</div>
+  <h2 class='frag'>Coûts et quotas : éviter les mauvaises surprises</h2>
+  <div class='split'>
+    <ul class='clean'>
+      <li class='frag'><strong>Cost Management</strong> analyse les dépenses par service.</li>
+      <li class='frag'>Un <strong>budget</strong> fixe un plafond de dépense.</li>
+      <li class='frag'>Des <strong>alertes</strong> préviennent à 50 %, 80 %, 100 %.</li>
+      <li class='frag'>Les <strong>quotas</strong> limitent les ressources par région.</li>
+    </ul>
+    <div class='stack'>
+      <div class='card frag'>
+        <div class='gauges'>
+          <div class='gauge'><div class='gauge-in'>80 %</div></div>
+          <div>
+            <strong>Suivi du budget</strong>
+            <div class='alertchip' style='margin:10px 0'><svg class='ico'><use href='#i-bell'/></svg> Alerte de dépassement</div>
+            <div class='note-small'>Seuils : 50 % · 80 % · 100 %</div>
+          </div>
+        </div>
+      </div>
+      <div class='card frag'>
+        <strong>Quota VM — France Central</strong>
+        <div class='qbar frag'><span></span></div>
+        <div class='note-small' style='margin-bottom:10px'>10 / 10 VM utilisées</div>
+        <button class='btn' type='button' tabindex='-1'>Demander une augmentation</button>
+      </div>
+    </div>
+  </div>
+  <div class='example frag'><svg class='ico ex-ico'><use href='#i-bulb'/></svg><span><b>Exemple :</b> quota de 10 VM en France Central → demander 20 VM.</span></div>
+  <aside class='notes' hidden>
+    <p>Cost Management répond à « où passe mon argent ? ». Le budget pose une limite ; les alertes préviennent avant de dépasser. Attention : un budget ne bloque pas automatiquement les dépenses, il informe.</p>
+    <p>Quotas : limites fixées par abonnement et par région, propres à chaque type de ressource (VM, cœurs GPU, IP…). Si une création échoue avec « quota exceeded », faites une demande d'augmentation dans le portail : Quota → New Quota Request (ou via le support pour certains services).</p>
+    <p>Bon réflexe : vérifier les quotas avant un projet, pas le jour du déploiement. Les quotas peuvent être augmentés, contrairement à un budget qui est un choix interne.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Coûts et quotas : éviter les mauvaises surprises</p>
+    <h4>Contenu exact</h4><ul><li>Cost Management analyse les dépenses</li><li>Budget = plafond</li><li>Alertes à 50/80/100 %</li><li>Quotas par région</li><li>Exemple : quota 10 VM → demander 20</li></ul>
+    <h4>Visuel / schéma</h4><p>Jauge circulaire à 80 % avec cloche orange, barre de quota pleine et bouton bleu de demande d'augmentation.</p>
+    <h4>Animation</h4><p>Jauge remplie à 80 %, cloche orange, barre de quota remplie, bouton allumé en bleu.</p>
+  </div>
+</section>
+
+<!-- ============ 18 ============ -->
+<section class='slide' data-title="A retenir 5 points cles">
+  <div class='kicker frag'>Conclusion</div>
+  <h2 class='frag'>À retenir : 5 points clés</h2>
+  <div class='stair'>
+    <div class='pill frag' style='--n:4'><span class='num'>1</span><span>Le cloud <strong>loue</strong> des ressources à la demande.</span></div>
+    <div class='pill frag' style='--n:3'><span class='num'>2</span><span>IaaS, PaaS, SaaS = qui gère quoi.</span></div>
+    <div class='pill frag' style='--n:2'><span class='num'>3</span><span>Azure s'organise en abonnements, groupes, ressources.</span></div>
+    <div class='pill frag' style='--n:1'><span class='num'>4</span><span>Foundry réunit modèles, agents et évaluation.</span></div>
+    <div class='pill frag' style='--n:0'><span class='num'>5</span><span>Surveillez et budgétez avant de déployer.</span></div>
+  </div>
+  <div class='question frag' style='margin-top:auto'>Question d'ouverture : et si votre application passait du serveur local au cloud demain ?</div>
+  <aside class='notes' hidden>
+    <p>On peut résumer la session en une phrase : « le cloud délègue l'infrastructure, pas la responsabilité. »</p>
+    <p>Relisez les cinq points rapidement, sans nouvelle explication, puis lancez la question ouverte : « Si votre application passait au cloud demain, par quel service commenceriez-vous ? »</p>
+    <p>Réponses attendues : une VM pour migrer (IaaS), App Service pour repartir du code (PaaS), Microsoft 365 pour un usage prêt à l'emploi (SaaS). Validez toutes les réponses cohérentes : l'objectif est de faire réemployer le vocabulaire.</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>À retenir : 5 points clés</p>
+    <h4>Contenu exact</h4><ul><li>Le cloud loue des ressources</li><li>IaaS/PaaS/SaaS = qui gère quoi</li><li>Abonnements, groupes, ressources</li><li>Foundry : modèles, agents, évaluation</li><li>Surveiller et budgéter</li><li>Question : passer au cloud demain ?</li></ul>
+    <h4>Visuel / schéma</h4><p>Cinq pastilles numérotées en escalier reliées par une ligne, et bulle de question en bas.</p>
+    <h4>Animation</h4><p>Cinq points de gauche à droite (0,12 s), question en fondu final.</p>
+  </div>
+</section>
+
+<!-- ============ 19 ============ -->
+<section class='slide' data-title="Mini quiz 3 questions">
+  <div class='kicker frag'>Conclusion</div>
+  <h2 class='frag'>Mini-quiz : 3 questions</h2>
+  <div class='quiz'>
+    <div class='qcard frag'>
+      <div class='qtitle'>Q1. Qui gère le système d'exploitation en PaaS ?</div>
+      <div class='opts'><span class='opt'>A. Vous</span><span class='opt'>B. Microsoft</span><span class='opt'>C. Personne</span></div>
+      <div class='answer frag'><svg class='ico'><use href='#i-check'/></svg>B. Microsoft</div>
+    </div>
+    <div class='qcard frag'>
+      <div class='qtitle'>Q2. Où se rangent les ressources dans Azure ?</div>
+      <div class='opts'><span class='opt'>A. Dans un groupe de ressources</span><span class='opt'>B. Dans un dossier local</span><span class='opt'>C. Dans un e-mail</span></div>
+      <div class='answer frag'><svg class='ico'><use href='#i-check'/></svg>A. Dans un groupe de ressources</div>
+    </div>
+    <div class='qcard frag'>
+      <div class='qtitle'>Q3. Que fait Microsoft Foundry ?</div>
+      <div class='opts'><span class='opt'>A. Héberge des VM</span><span class='opt'>B. Crée et évalue des agents IA</span><span class='opt'>C. Envoie des e-mails</span></div>
+      <div class='answer frag'><svg class='ico'><use href='#i-check'/></svg>B. Crée et évalue des agents IA</div>
+    </div>
+  </div>
+  <p class='note-small frag'>Votez à main levée avant de révéler chaque réponse.</p>
+  <aside class='notes' hidden>
+    <p>Corrigé et explications :</p>
+    <ul>
+      <li>Q1 — B : en PaaS, Microsoft gère l'infrastructure et la plateforme, donc l'OS. Vous gardez code et données (slide 4).</li>
+      <li>Q2 — A : le groupe de ressources est le dossier logique qui contient les ressources (slide 10).</li>
+      <li>Q3 — B : Foundry sert à choisir des modèles, créer des agents, les déployer et les évaluer (slides 12–13).</li>
+    </ul>
+    <p>Animez en demandant d'abord un vote à main levée avant de révéler. Si une majorité se trompe, reprenez le slide correspondant en deux phrases. Clôture : « Vous avez maintenant le vocabulaire pour lire une console Azure sans vous perdre. Bonne continuation ! »</p>
+  </aside>
+  <div class='fiche' hidden>
+    <h4>Titre</h4><p>Mini-quiz : 3 questions</p>
+    <h4>Contenu exact</h4><ul><li>Q1 : qui gère l'OS en PaaS ? → B. Microsoft</li><li>Q2 : où se rangent les ressources ? → A. groupe de ressources</li><li>Q3 : que fait Foundry ? → B. crée et évalue des agents IA</li></ul>
+    <h4>Visuel / schéma</h4><p>Trois cartes de question avec propositions A/B/C ; réponse révélée entourée de bleu avec une coche.</p>
+    <h4>Animation</h4><p>Cartes affichées, puis révélation des réponses une par clic, coche tracée en 0,25 s.</p>
+  </div>
+</section>
+
+</main>
+
+<div class='hint'>← → ou Espace : changer de slide · R : rejouer · N : notes · I : fiche · F : plein écran</div>
+<div class='ui'>
+  <button class='btnui' id='prev' title='Précédent' aria-label='Précédent'><svg class='ico'><use href='#i-left'/></svg></button>
+  <span class='counter' id='counter'>1 / 19</span>
+  <button class='btnui' id='next' title='Suivant' aria-label='Suivant'><svg class='ico'><use href='#i-right'/></svg></button>
+  <button class='btnui wide' id='notesBtn' title='Notes du présentateur'>Notes</button>
+  <button class='btnui wide' id='ficheBtn' title='Fiche technique'>Fiche</button>
+  <button class='btnui' id='replayBtn' title="Rejouer l'animation" aria-label="Rejouer l'animation"><svg class='ico'><use href='#i-refresh'/></svg></button>
+  <button class='btnui' id='fullBtn' title='Plein écran' aria-label='Plein écran'><svg class='ico'><use href='#i-expand'/></svg></button>
+</div>
+<aside id='panel'>
+  <div id='panelHead'><span id='panelTitle'></span><button class='close' id='closePanel' aria-label='Fermer'><svg class='ico'><use href='#i-close'/></svg></button></div>
+  <div id='panelBody'></div>
+</aside>
+
+<script>
+(function(){
+  'use strict';
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var progress=document.getElementById('progress');
+  var counter=document.getElementById('counter');
+  var panel=document.getElementById('panel');
+  var panelTitle=document.getElementById('panelTitle');
+  var panelBody=document.getElementById('panelBody');
+  var i=0, mode=null, timers=[];
+
+  function fragments(s){return Array.prototype.slice.call(s.querySelectorAll('.frag'));}
+
+  function clearTimers(){
+    timers.forEach(function(t){clearTimeout(t);});
+    timers=[];
+  }
+
+  function autoReveal(){
+    clearTimers();
+    var fs=fragments(slides[i]);
+    fs.forEach(function(f){f.classList.remove('in');});
+    var gap=Math.max(80,Math.min(140,Math.round(1200/Math.max(fs.length,1))));
+    fs.forEach(function(f,n){
+      timers.push(setTimeout(function(){f.classList.add('in');},60+n*gap));
+    });
+  }
+
+  function renderPanel(){
+    if(!mode)return;
+    var s=slides[i];
+    var src=mode==='notes'?s.querySelector('.notes'):s.querySelector('.fiche');
+    panelTitle.textContent=(mode==='notes'?'Notes du présentateur · ':'Fiche technique · ')+(i+1)+' / '+slides.length;
+    panelBody.innerHTML=src?src.innerHTML:'';
+    panel.scrollTop=0;
+  }
+
+  function render(){
+    slides.forEach(function(s,n){s.classList.toggle('active',n===i);});
+    counter.textContent=(i+1)+' / '+slides.length;
+    progress.style.transform='scaleX('+((i+1)/slides.length)+')';
+    document.title=(slides[i].getAttribute('data-title')||'Présentation')+' — '+((i+1)+'/'+slides.length);
+    autoReveal();
+    renderPanel();
+  }
+
+  function next(){ if(i<slides.length-1){i++;render();} }
+  function prev(){ if(i>0){i--;render();} }
+  function replay(){ autoReveal(); }
+
+  function toggle(m){
+    mode=(mode===m)?null:m;
+    panel.classList.toggle('open',!!mode);
+    renderPanel();
+  }
+
+  function full(){
+    if(!document.fullscreenElement){
+      if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();
+    }else if(document.exitFullscreen){document.exitFullscreen();}
+  }
+
+  document.getElementById('next').addEventListener('click',next);
+  document.getElementById('prev').addEventListener('click',prev);
+  document.getElementById('notesBtn').addEventListener('click',function(){toggle('notes');});
+  document.getElementById('ficheBtn').addEventListener('click',function(){toggle('fiche');});
+  document.getElementById('replayBtn').addEventListener('click',replay);
+  document.getElementById('closePanel').addEventListener('click',function(){toggle(mode);});
+  document.getElementById('fullBtn').addEventListener('click',full);
+
+  document.getElementById('deck').addEventListener('click',function(e){
+    if(e.target.closest('button,a'))return;
+    next();
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight',' ','PageDown','Enter'].indexOf(e.key)>=0){e.preventDefault();next();}
+    else if(['ArrowLeft','Backspace','PageUp'].indexOf(e.key)>=0){e.preventDefault();prev();}
+    else if(e.key==='Home'){e.preventDefault();i=0;render();}
+    else if(e.key==='End'){e.preventDefault();i=slides.length-1;render();}
+    else if(e.key==='r'||e.key==='R'){replay();}
+    else if(e.key==='n'||e.key==='N'){toggle('notes');}
+    else if(e.key==='i'||e.key==='I'){toggle('fiche');}
+    else if(e.key==='f'||e.key==='F'){full();}
+    else if(e.key==='Escape'&&mode){toggle(mode);}
+  });
+
+  var h=parseInt((location.hash||'').replace('#',''),10);
+  if(!isNaN(h)&&h>=1&&h<=slides.length){i=h-1;}
+  render();
+})();
+</script>
+</body>
+</html>

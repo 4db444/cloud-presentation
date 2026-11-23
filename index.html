@@ -1062,10 +1062,10 @@ ul.clean li::before{content:'';width:6px;height:6px;border-radius:50%;background
   document.getElementById('closePanel').addEventListener('click',function(){toggle(mode);});
   document.getElementById('fullBtn').addEventListener('click',full);
 
-  document.getElementById('deck').addEventListener('click',function(e){
-    if(e.target.closest('button,a'))return;
-    next();
-  });
+  // document.getElementById('deck').addEventListener('click',function(e){
+  //   if(e.target.closest('button,a'))return;
+  //   next();
+  // });
 
   document.addEventListener('keydown',function(e){
     if(['ArrowRight',' ','PageDown','Enter'].indexOf(e.key)>=0){e.preventDefault();next();}
